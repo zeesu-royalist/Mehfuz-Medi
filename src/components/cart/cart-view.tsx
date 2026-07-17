@@ -87,7 +87,7 @@ export function CartView() {
                 {/* Thumbnail */}
                 <Link
                   href={`/products/${item.slug}`}
-                  className="relative h-24 w-18 overflow-hidden rounded-sm bg-muted border shrink-0"
+                  className="relative h-24 w-20 overflow-hidden rounded-sm bg-muted border shrink-0"
                 >
                   <img
                     src={item.imageUrl}

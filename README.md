@@ -1,4 +1,4 @@
-# Souled Clone — E-Commerce Platform
+# Mehfuz-Medi — E-Commerce Platform
 
 Production-style clone of the reference UI (Next.js 15 App Router, TypeScript,
 Tailwind, Shadcn UI, Prisma, PostgreSQL, Auth.js, Cloudinary, Zustand).

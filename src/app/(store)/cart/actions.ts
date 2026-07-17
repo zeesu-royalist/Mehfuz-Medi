@@ -66,7 +66,18 @@ export async function getDbCart(): Promise<ActionResult> {
       });
     }
 
-    return { success: true, data: cart.items };
+    const serializedItems = cart.items.map((item) => ({
+      ...item,
+      product: {
+        ...item.product,
+        price: Number(item.product.price),
+        discountPrice: item.product.discountPrice
+          ? Number(item.product.discountPrice)
+          : null,
+      },
+    }));
+
+    return { success: true, data: serializedItems };
   } catch (error: any) {
     return { success: false, error: error.message || "Failed to fetch cart" };
   }

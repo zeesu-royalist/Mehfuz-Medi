@@ -29,7 +29,7 @@ export function Footer() {
     <footer className="border-t border-border bg-brand-ink text-white">
       {/* Newsletter */}
       <div className="border-b border-white/10">
-        <div className="container flex flex-col items-center gap-4 py-8 sm:flex-row sm:justify-between">
+        <div className="container flex flex-col items-center gap-4 py-8 sm:flex-row sm:justify-between text-center sm:text-left">
           <div>
             <h3 className="text-lg font-bold tracking-wide">
               STAY IN THE LOOP
@@ -38,15 +38,15 @@ export function Footer() {
               Subscribe for exclusive offers, new launches & more.
             </p>
           </div>
-          <form className="flex w-full max-w-sm gap-2">
+          <form className="flex w-full max-w-sm flex-col gap-2.5 sm:flex-row">
             <input
               type="email"
               placeholder="Enter your email"
-              className="h-10 flex-1 rounded-sm border border-white/20 bg-white/5 px-4 text-sm text-white placeholder:text-white/40 outline-none focus:border-brand-red"
+              className="h-10 w-full rounded-sm border border-white/20 bg-white/5 px-4 text-sm text-white placeholder:text-white/40 outline-none focus:border-brand-red"
             />
             <button
               type="submit"
-              className="h-10 rounded-sm bg-brand-red px-6 text-sm font-semibold uppercase tracking-wide text-white transition-colors hover:bg-brand-red/90"
+              className="h-10 rounded-sm bg-brand-red px-6 text-sm font-semibold uppercase tracking-wide text-white transition-colors hover:bg-brand-red/90 sm:w-auto"
             >
               Subscribe
             </button>
@@ -56,9 +56,9 @@ export function Footer() {
 
       {/* Link columns */}
       <div className="container py-10">
-        <div className="grid grid-cols-2 gap-8 sm:grid-cols-3 lg:grid-cols-4">
+        <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-4">
           {/* Logo + tagline column */}
-          <div className="col-span-2 sm:col-span-3 lg:col-span-1">
+          <div className="sm:col-span-2 md:col-span-1">
             <Link href="/" className="font-display text-2xl text-brand-red">
               The Souled Store
             </Link>
@@ -80,8 +80,8 @@ export function Footer() {
                       href={link.href}
                       className="text-sm text-white/50 transition-colors hover:text-white"
                       {...(link.href.startsWith("http")
-                        ? { target: "_blank", rel: "noopener noreferrer" }
-                        : {})}
+                         ? { target: "_blank", rel: "noopener noreferrer" }
+                         : {})}
                     >
                       {link.label}
                     </Link>
@@ -96,12 +96,12 @@ export function Footer() {
       <Separator className="bg-white/10" />
 
       {/* Copyright */}
-      <div className="container flex flex-col items-center justify-between gap-2 py-6 sm:flex-row">
-        <p className="text-xs text-white/40">
+      <div className="container flex flex-col items-center justify-between gap-4 py-6 sm:flex-row">
+        <p className="text-xs text-white/40 text-center sm:text-left">
           &copy; {new Date().getFullYear()} The Souled Store. All rights
           reserved.
         </p>
-        <div className="flex gap-4 text-xs text-white/40">
+        <div className="flex flex-wrap justify-center gap-x-4 gap-y-2 text-xs text-white/40">
           <span>100% Secure Payments</span>
           <span>•</span>
           <span>Easy Returns</span>

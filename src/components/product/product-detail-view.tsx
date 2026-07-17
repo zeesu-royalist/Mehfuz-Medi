@@ -7,6 +7,8 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { WishlistButton } from "@/components/wishlist/wishlist-button";
+import { useSession } from "next-auth/react";
+import { useCartStore } from "@/store/cart-store";
 
 interface Variant {
   id: string;
@@ -27,6 +29,7 @@ interface ProductDetailViewProps {
   product: {
     id: string;
     name: string;
+    slug: string;
     description: string;
     price: number;
     discountPrice: number | null;
@@ -40,6 +43,10 @@ interface ProductDetailViewProps {
 }
 
 export function ProductDetailView({ product }: ProductDetailViewProps) {
+  const { data: session } = useSession();
+  const isLoggedIn = !!session?.user;
+  const { addItem, isLoading } = useCartStore();
+
   const [activeImage, setActiveImage] = useState(product.images[0]?.url || "");
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
   const [quantity, setQuantity] = useState(1);
@@ -58,12 +65,39 @@ export function ProductDetailView({ product }: ProductDetailViewProps) {
     id: v.id,
   }));
 
-  const handleAddToCart = () => {
+  const handleAddToCart = async () => {
     if (sizes.length > 0 && !selectedSize) {
       toast.error("Please select a size first!");
       return;
     }
-    toast.success(`Added ${quantity} item(s) to your cart.`);
+
+    const selectedVariant = product.variants.find((v) => v.size === selectedSize);
+    const variantId = selectedVariant ? selectedVariant.id : null;
+    const variantColor = selectedVariant ? selectedVariant.color : null;
+    const variantStock = selectedVariant ? selectedVariant.stock : product.stock;
+
+    try {
+      await addItem(
+        {
+          productId: product.id,
+          variantId,
+          name: product.name,
+          slug: product.slug,
+          price: product.price,
+          discountPrice: product.discountPrice,
+          imageUrl: product.images[0]?.url || "",
+          size: selectedSize,
+          color: variantColor,
+          stock: variantStock,
+        },
+        quantity,
+        isLoggedIn
+      );
+      toast.success(`Added ${quantity} item(s) to your cart.`);
+    } catch (err: any) {
+      console.error("Failed to add item to cart:", err);
+      toast.error("Failed to add item to cart. Please try again.");
+    }
   };
 
   const handlePincodeCheck = (e: React.FormEvent) => {
@@ -214,9 +248,10 @@ export function ProductDetailView({ product }: ProductDetailViewProps) {
               <span className="text-[10px] text-transparent select-none">Buy</span>
               <Button
                 onClick={handleAddToCart}
+                disabled={isLoading}
                 className="w-full h-11 font-bold text-sm tracking-wider uppercase"
               >
-                Add To Cart
+                {isLoading ? "Adding..." : "Add To Cart"}
               </Button>
             </div>
 

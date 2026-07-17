@@ -59,7 +59,7 @@ export function ImageTextSection() {
             className="font-extrabold leading-tight text-black"
             style={{ fontSize: "clamp(16px, 4vw, 40px)" }}
           >
-            Redefine your everyday style with premium essentials designed for comfort
+            Redefine your everyday style with premium essentials
           </h2>
 
           <p
@@ -70,7 +70,7 @@ export function ImageTextSection() {
               lineHeight: 1.6,
             }}
           >
-            Discover premium fashion crafted for everyday confidence. From oversized t-shirts and timeless shirts to versatile jeans, joggers, and polos, every piece is designed with quality fabrics, modern fits, and attention to detail to elevate your everyday wardrobe.
+            Discover premium fashion crafted for everyday confidence.
           </p>
         </div>
       </div>
