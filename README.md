@@ -13,8 +13,6 @@ npm run dev
 npm run db:seed         # creates an admin user + base categories
 ```
 
-Seeded admin login: `admin@souledclone.dev` / `Admin@12345` (change immediately in a real deployment).
-
 ## Auth flows implemented
 
 - Register (`/register`) — creates User + empty Cart + empty Wishlist in one transaction-safe call
