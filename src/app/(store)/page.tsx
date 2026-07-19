@@ -105,33 +105,35 @@ export default async function HomePage() {
           </p>
         </div>
 
-        {/* Product cards or skeleton fallback */}
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4 lg:gap-5">
-          {newProducts.length > 0 ? (
-            newProducts.map((product) => (
+        {/* Product cards or empty state */}
+        {newProducts.length > 0 ? (
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4 lg:gap-5">
+            {newProducts.map((product) => (
               <ProductCard key={product.id} product={product} />
-            ))
-          ) : (
-            Array.from({ length: 8 }).map((_, i) => (
-              <div key={i} className="space-y-2.5">
-                <Skeleton className="aspect-[3/4] w-full rounded-sm" />
-                <Skeleton className="h-4 w-3/4" />
-                <Skeleton className="h-3 w-1/2" />
-                <Skeleton className="h-4 w-1/4" />
-              </div>
-            ))
-          )}
-        </div>
+            ))}
+          </div>
+        ) : (
+          <div className="rounded-md border border-dashed py-12 text-center bg-white">
+            <p className="text-sm font-semibold uppercase tracking-wider text-brand-ink">
+              No Products Available
+            </p>
+            <p className="mt-1 text-xs text-muted-foreground">
+              New arrivals will appear here once added to the database catalogue.
+            </p>
+          </div>
+        )}
 
-        <div className="mt-8 text-center">
-          <Link
-            href="/products"
-            className="inline-flex items-center gap-2 rounded-sm border-2 border-brand-ink px-6 py-2.5 text-sm font-bold uppercase tracking-wide text-brand-ink transition-colors hover:bg-brand-ink hover:text-white"
-          >
-            View All Products
-            <ArrowRight className="h-4 w-4" />
-          </Link>
-        </div>
+        {newProducts.length > 0 && (
+          <div className="mt-8 text-center">
+            <Link
+              href="/products"
+              className="inline-flex items-center gap-2 rounded-sm border-2 border-brand-ink px-6 py-2.5 text-sm font-bold uppercase tracking-wide text-brand-ink transition-colors hover:bg-brand-ink hover:text-white"
+            >
+              View All Products
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
+        )}
       </section>
 
       {/* ── Shop by Category ── */}
@@ -191,41 +193,33 @@ export default async function HomePage() {
           </p>
         </div>
 
-        {/* Marquee wrapper — hides overflow; scroll hamesha continuously chalta rahega */}
-        <div className="group relative overflow-hidden">
-          {/* Left & right fade edges (optional, remove agar na chahiye) */}
-          <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-8 bg-gradient-to-r from-background to-transparent sm:w-16" />
-          <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-8 bg-gradient-to-l from-background to-transparent sm:w-16" />
+        {featuredProducts.length > 0 ? (
+          <div className="group relative overflow-hidden">
+            <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-8 bg-gradient-to-r from-background to-transparent sm:w-16" />
+            <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-8 bg-gradient-to-l from-background to-transparent sm:w-16" />
 
-          <div
-            className="flex w-max gap-3 sm:gap-4 [animation:trending-scroll_28s_linear_infinite]"
-          >
-            {/* Original set tripled — guarantees a seamless, never-ending loop
-          no matter how few products there are */}
-            {(featuredProducts.length > 0
-              ? [...featuredProducts, ...featuredProducts, ...featuredProducts]
-              : Array.from({ length: 12 })
-            ).map((product, i) =>
-              featuredProducts.length > 0 ? (
+            <div className="flex w-max gap-3 sm:gap-4 [animation:trending-scroll_28s_linear_infinite]">
+              {[...featuredProducts, ...featuredProducts, ...featuredProducts].map((product, i) => (
                 <div
-                  key={`${(product as { id: string | number }).id}-${i}`}
+                  key={`${product.id}-${i}`}
                   className="w-32 shrink-0 sm:w-40 lg:w-48"
                 >
-                  <ProductCard product={product as any} />
+                  <ProductCard product={product} />
                 </div>
-              ) : (
-                <div key={i} className="w-32 shrink-0 space-y-2 sm:w-40 lg:w-48">
-                  <Skeleton className="aspect-[3/4] w-full rounded-sm" />
-                  <Skeleton className="h-3.5 w-3/4" />
-                  <Skeleton className="h-3 w-1/2" />
-                  <Skeleton className="h-3.5 w-1/4" />
-                </div>
-              )
-            )}
+              ))}
+            </div>
           </div>
-        </div>
+        ) : (
+          <div className="rounded-md border border-dashed py-12 text-center bg-white">
+            <p className="text-sm font-semibold uppercase tracking-wider text-brand-ink">
+              No Featured Products
+            </p>
+            <p className="mt-1 text-xs text-muted-foreground">
+              Mark products as featured in the admin panel to display them here.
+            </p>
+          </div>
+        )}
 
-        {/* Animation keyframes — is <style> tag ko yahin rehne dein */}
         <style>{`
     @keyframes trending-scroll {
       from { transform: translateX(0); }
@@ -241,7 +235,6 @@ export default async function HomePage() {
         {/* Moving background images */}
         <div className="absolute inset-0 z-0">
           <div className="flex h-full w-max [animation:cta-bg-scroll_25s_linear_infinite]">
-            {/* Apni images ke URLs yahan array me daal dein */}
             {[
               "https://images.unsplash.com/photo-1620336655055-088d06e36bf0?w=800&q=80",
               "https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?w=800&q=80",
@@ -249,7 +242,6 @@ export default async function HomePage() {
               "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRzhypj2giTbt_u1-wgjyAIzWHnIEdyDPYGQtDnxQc3OlpiNoMAr0gqnd4&s=10",
               "https://st5.depositphotos.com/62628780/62394/i/450/depositphotos_623945220-stock-photo-laptop-fashion-woman-designer-working.jpg",
             ]
-              // Teen guna kar diya taki loop bilkul seamless dikhe
               .flatMap((url) => [url, url, url])
               .map((url, i) => (
                 <div
@@ -267,10 +259,8 @@ export default async function HomePage() {
           </div>
         </div>
 
-        {/* Dark overlay so text stays readable on top of the moving images */}
         <div className="absolute inset-0 z-10 bg-brand-ink/80" />
 
-        {/* Content — sits above the images and overlay */}
         <div className="container relative z-20 text-center">
           <h2 className="font-display text-4xl tracking-wider text-white sm:text-5xl lg:text-6xl">
             OFFICIALLY LICENSED
@@ -288,7 +278,6 @@ export default async function HomePage() {
           </Link>
         </div>
 
-        {/* Animation keyframes — is <style> tag ko yahin rehne dein */}
         <style>{`
     @keyframes cta-bg-scroll {
       from { transform: translateX(0); }
@@ -297,8 +286,7 @@ export default async function HomePage() {
   `}</style>
       </section>
 
-
-      {/* ── Trending Section Placeholder ── */}
+      {/* ── Hot Products Section ── */}
       <section className="container py-10 sm:py-14">
         <div className="mb-8 text-center">
           <h2 className="font-display text-3xl tracking-wide text-brand-ink sm:text-4xl">
@@ -309,22 +297,22 @@ export default async function HomePage() {
           </p>
         </div>
 
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4 lg:gap-5">
-          {featuredProducts.length > 0 ? (
-            featuredProducts.map((product) => (
+        {featuredProducts.length > 0 ? (
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4 lg:gap-5">
+            {featuredProducts.map((product) => (
               <ProductCard key={product.id} product={product} />
-            ))
-          ) : (
-            Array.from({ length: 4 }).map((_, i) => (
-              <div key={i} className="space-y-2.5">
-                <Skeleton className="aspect-[3/4] w-full rounded-sm" />
-                <Skeleton className="h-4 w-3/4" />
-                <Skeleton className="h-3 w-1/2" />
-                <Skeleton className="h-4 w-1/4" />
-              </div>
-            ))
-          )}
-        </div>
+            ))}
+          </div>
+        ) : (
+          <div className="rounded-md border border-dashed py-12 text-center bg-white">
+            <p className="text-sm font-semibold uppercase tracking-wider text-brand-ink">
+              No Hot Products Found
+            </p>
+            <p className="mt-1 text-xs text-muted-foreground">
+              Add products in your admin dashboard to feature them here.
+            </p>
+          </div>
+        )}
       </section>
     </>
   );

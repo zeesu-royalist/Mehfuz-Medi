@@ -1,6 +1,5 @@
 import { v2 as cloudinary } from "cloudinary";
 
-// Configure Cloudinary only if the credentials are present
 const isConfigured = !!(
   process.env.CLOUDINARY_CLOUD_NAME &&
   process.env.CLOUDINARY_API_KEY &&
@@ -13,14 +12,10 @@ if (isConfigured) {
     api_key: process.env.CLOUDINARY_API_KEY,
     api_secret: process.env.CLOUDINARY_API_SECRET,
   });
-} else {
-  console.warn(
-    "Cloudinary credentials are not set in environment variables. Falling back to Mock mode."
-  );
 }
 
 /**
- * Uploads an image to Cloudinary (or returns a mock URL if credentials are not configured)
+ * Uploads an image to Cloudinary
  * @param fileStr - Base64 encoded image string or data URL
  * @param folder - Cloudinary folder name (e.g., 'products', 'categories')
  */
@@ -29,12 +24,9 @@ export async function uploadImage(
   folder: string
 ): Promise<{ publicId: string; url: string }> {
   if (!isConfigured) {
-    // Generate a random mock public ID and use a placeholder image URL
-    const mockId = `mock_${Math.random().toString(36).substring(7)}`;
-    return {
-      publicId: mockId,
-      url: `https://images.unsplash.com/photo-1523381210434-271e8be1f52b?w=800&auto=format&fit=crop`,
-    };
+    throw new Error(
+      "Cloudinary credentials (CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET) are missing from environment variables."
+    );
   }
 
   try {
@@ -47,26 +39,26 @@ export async function uploadImage(
       publicId: uploadResponse.public_id,
       url: uploadResponse.secure_url,
     };
-  } catch (error) {
+  } catch (error: any) {
     console.error("Cloudinary upload error:", error);
-    throw new Error("Failed to upload image to Cloudinary");
+    throw new Error(error.message || "Failed to upload image to Cloudinary");
   }
 }
 
 /**
- * Deletes an image from Cloudinary (or returns success in mock mode)
+ * Deletes an image from Cloudinary
  * @param publicId - Cloudinary public ID of the image
  */
 export async function deleteImage(publicId: string): Promise<{ success: boolean }> {
-  if (!isConfigured || publicId.startsWith("mock_")) {
+  if (!isConfigured) {
     return { success: true };
   }
 
   try {
     const result = await cloudinary.uploader.destroy(publicId);
     return { success: result.result === "ok" };
-  } catch (error) {
+  } catch (error: any) {
     console.error("Cloudinary delete error:", error);
-    throw new Error("Failed to delete image from Cloudinary");
+    throw new Error(error.message || "Failed to delete image from Cloudinary");
   }
 }

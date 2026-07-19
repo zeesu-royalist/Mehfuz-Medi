@@ -58,7 +58,7 @@ export async function cancelUserOrder(orderId: string): Promise<ActionResult> {
             where: { id: item.variantId },
             data: { stock: { increment: item.quantity } },
           });
-        } else {
+        } else if (item.productId) {
           await tx.product.update({
             where: { id: item.productId },
             data: { stock: { increment: item.quantity } },
