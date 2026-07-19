@@ -12,7 +12,7 @@ npm run db:push        # or db:migrate once schema is finalized
 npm run dev
 npm run db:seed         # creates an admin user + base categories
 ```
-
+    
 ## Auth flows implemented
 
 - Register (`/register`) — creates User + empty Cart + empty Wishlist in one transaction-safe call
