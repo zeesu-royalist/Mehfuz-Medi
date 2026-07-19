@@ -4,8 +4,10 @@ import { PrismaAdapter } from "@auth/prisma-adapter";
 import { db } from "@/lib/db";
 import { verifyPassword } from "@/lib/password";
 import { loginSchema } from "@/lib/validators/auth";
+import { authConfig } from "./auth.config";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
+  ...authConfig,
   adapter: PrismaAdapter(db),
   session: { strategy: "jwt" },
   pages: {
