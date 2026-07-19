@@ -85,13 +85,18 @@ export const useCartStore = create<CartState>()(
 
         if (isLoggedIn) {
           set({ isLoading: true });
-          const res = await addToDbCart(item.productId, item.variantId, quantity);
-          if (res.success) {
-            await get().fetchCart(true);
-          } else {
-            console.error("Failed to sync add to db cart:", res.error);
+          try {
+            const res = await addToDbCart(item.productId, item.variantId, quantity);
+            if (res.success) {
+              await get().fetchCart(true);
+            } else {
+              console.error("Failed to sync add to db cart:", res.error);
+            }
+          } catch (err) {
+            console.error("Failed to add to db cart:", err);
+          } finally {
+            set({ isLoading: false });
           }
-          set({ isLoading: false });
         } else {
           // Guest local cart logic
           if (existingItemIdx > -1) {

@@ -11,11 +11,12 @@ export function cn(...inputs: ClassValue[]) {
 
 /** Format a number (in paise/cents-free rupees) as INR currency, e.g. ₹1,299 */
 export function formatPrice(amount: number) {
-  return new Intl.NumberFormat("en-IN", {
+  const formatted = new Intl.NumberFormat("en-IN", {
     style: "currency",
     currency: "INR",
     maximumFractionDigits: 0,
   }).format(amount);
+  return formatted.replace(/\s/g, "").replace(/\u00A0/g, "");
 }
 
 /** Simple slugify used for product/category slugs */

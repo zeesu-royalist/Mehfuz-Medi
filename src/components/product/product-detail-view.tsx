@@ -45,7 +45,7 @@ interface ProductDetailViewProps {
 export function ProductDetailView({ product }: ProductDetailViewProps) {
   const { data: session } = useSession();
   const isLoggedIn = !!session?.user;
-  const { addItem, isLoading } = useCartStore();
+  const { addItem } = useCartStore();
 
   const [activeImage, setActiveImage] = useState(product.images[0]?.url || "");
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
@@ -53,6 +53,7 @@ export function ProductDetailView({ product }: ProductDetailViewProps) {
   const [pincode, setPincode] = useState("");
   const [pincodeChecked, setPincodeChecked] = useState(false);
   const [activeAccordion, setActiveAccordion] = useState<string | null>("details");
+  const [isAdding, setIsAdding] = useState(false);
 
   const hasDiscount =
     product.discountPrice != null && product.discountPrice < product.price;
@@ -76,6 +77,7 @@ export function ProductDetailView({ product }: ProductDetailViewProps) {
     const variantColor = selectedVariant ? selectedVariant.color : null;
     const variantStock = selectedVariant ? selectedVariant.stock : product.stock;
 
+    setIsAdding(true);
     try {
       await addItem(
         {
@@ -97,6 +99,8 @@ export function ProductDetailView({ product }: ProductDetailViewProps) {
     } catch (err: any) {
       console.error("Failed to add item to cart:", err);
       toast.error("Failed to add item to cart. Please try again.");
+    } finally {
+      setIsAdding(false);
     }
   };
 
@@ -248,10 +252,10 @@ export function ProductDetailView({ product }: ProductDetailViewProps) {
               <span className="text-[10px] text-transparent select-none">Buy</span>
               <Button
                 onClick={handleAddToCart}
-                disabled={isLoading}
+                disabled={isAdding}
                 className="w-full h-11 font-bold text-sm tracking-wider uppercase"
               >
-                {isLoading ? "Adding..." : "Add To Cart"}
+                {isAdding ? "Adding..." : "Add To Cart"}
               </Button>
             </div>
 

@@ -1,9 +1,9 @@
 "use client";
 
-import { useTransition, useEffect, useState } from "react";
+import { useTransition } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { toggleDbWishlist, checkWishlistStatus } from "@/app/(store)/wishlist/actions";
+import { useWishlistStore } from "@/store/wishlist-store";
 import { Heart, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
@@ -22,38 +22,28 @@ export function WishlistButton({
   const { data: session } = useSession();
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
-  const [isLiked, setIsLiked] = useState(initialIsLiked);
+  const { isWishlisted, toggleWishlist } = useWishlistStore();
 
-  // Sync wishlist status on mount/login
-  useEffect(() => {
-    if (session?.user && !initialIsLiked) {
-      checkWishlistStatus(productId).then((status) => setIsLiked(status));
-    }
-  }, [productId, session, initialIsLiked]);
+  const isLoggedIn = !!session?.user;
+  const isLiked = initialIsLiked || isWishlisted(productId);
 
   const handleToggle = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
 
-    if (!session?.user) {
+    if (!isLoggedIn) {
       toast.error("Please log in to add items to your wishlist.");
       router.push("/login");
       return;
     }
 
     startTransition(async () => {
-      // Optimistic update
-      setIsLiked((prev) => !prev);
-
-      const res = await toggleDbWishlist(productId);
+      const res = await toggleWishlist(productId, true);
       if (!res.success) {
-        // Rollback on failure
-        setIsLiked((prev) => !prev);
         toast.error(res.error || "Failed to update wishlist");
-      } else if (res.data) {
-        setIsLiked(res.data.isLiked);
+      } else if (res.isLiked !== undefined) {
         toast.success(
-          res.data.isLiked ? "Added to wishlist" : "Removed from wishlist"
+          res.isLiked ? "Added to wishlist" : "Removed from wishlist"
         );
       }
     });

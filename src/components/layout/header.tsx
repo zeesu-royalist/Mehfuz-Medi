@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
 import { useState, useEffect } from "react";
 import { useCartStore } from "@/store/cart-store";
+import { useWishlistStore } from "@/store/wishlist-store";
 import {
   Menu,
   Search,
@@ -71,16 +72,19 @@ export function Header() {
   const [mounted, setMounted] = useState(false);
 
   const { items, fetchCart, mergeLocalCartToDb } = useCartStore();
+  const { fetchWishlist } = useWishlistStore();
   const isLoggedIn = !!session?.user;
 
   useEffect(() => {
     setMounted(true);
     if (isLoggedIn) {
       mergeLocalCartToDb().then(() => fetchCart(true));
+      fetchWishlist(true);
     } else {
       fetchCart(false);
+      fetchWishlist(false);
     }
-  }, [isLoggedIn, fetchCart, mergeLocalCartToDb]);
+  }, [isLoggedIn, fetchCart, mergeLocalCartToDb, fetchWishlist]);
 
   const cartCount = mounted ? items.reduce((sum, item) => sum + item.quantity, 0) : 0;
 
