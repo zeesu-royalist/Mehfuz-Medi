@@ -22,7 +22,7 @@ export function SettingsForm({ initialSettings }: SettingsFormProps) {
     formState: { isSubmitting },
   } = useForm({
     defaultValues: {
-      siteName: initialSettings.siteName || "The Souled Store",
+      siteName: initialSettings.siteName || "MR.SMEXO",
       supportEmail: initialSettings.supportEmail || "support@souledclone.dev",
       contactNumber: initialSettings.contactNumber || "+91 1800-100-200",
       taxRate: initialSettings.taxRate || "18",
@@ -52,7 +52,7 @@ export function SettingsForm({ initialSettings }: SettingsFormProps) {
             <Label htmlFor="siteName">Site Title</Label>
             <Input
               id="siteName"
-              placeholder="The Souled Store"
+              placeholder="MR.SMEXO"
               {...register("siteName")}
               disabled={isPending || isSubmitting}
             />

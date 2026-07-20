@@ -38,6 +38,10 @@ const NAV_LINKS = [
   { href: "/categories/men", label: "MEN" },
   { href: "/categories/women", label: "WOMEN" },
   { href: "/categories/sneakers", label: "SNEAKERS" },
+  { href: "/products?category=sneakers", label: "BESTOF" },
+  { href: "/products?category=shirts&sort=newest", label: "SHIRTS" },
+  { href: "/products?category=t-shirts&sort=newest", label: "T-SHIRTS" },
+  { href: "https://www.instagram.com/mehfooz_here/", label: "CONTACT" },
 ] as const;
 
 const MOBILE_NAV_SECTIONS = [

@@ -1,7 +1,7 @@
 import { Resend } from "resend";
 
 const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
-const FROM = process.env.EMAIL_FROM ?? "The Souled Store <no-reply@example.com>";
+const FROM = process.env.EMAIL_FROM ?? "MR.SMEXO <no-reply@example.com>";
 
 export async function sendPasswordResetEmail(email: string, resetUrl: string) {
   if (!resend) {

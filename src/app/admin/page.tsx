@@ -98,7 +98,7 @@ export default async function AdminDashboardPage() {
           Dashboard Overview
         </h1>
         <p className="mt-1.5 text-sm text-muted-foreground">
-          Real-time metrics and summaries for The Souled Store.
+          Real-time metrics and summaries for MR.SMEXO.
         </p>
       </div>
 

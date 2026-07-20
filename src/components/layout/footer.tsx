@@ -60,7 +60,7 @@ export function Footer() {
           {/* Logo + tagline column */}
           <div className="sm:col-span-2 md:col-span-1">
             <Link href="/" className="font-display text-2xl text-brand-red">
-              The Souled Store
+              MR.SMEXO
             </Link>
             <p className="mt-3 max-w-xs text-sm leading-relaxed text-white/60">
               India&#39;s favourite destination for officially licensed
@@ -80,8 +80,8 @@ export function Footer() {
                       href={link.href}
                       className="text-sm text-white/50 transition-colors hover:text-white"
                       {...(link.href.startsWith("http")
-                         ? { target: "_blank", rel: "noopener noreferrer" }
-                         : {})}
+                        ? { target: "_blank", rel: "noopener noreferrer" }
+                        : {})}
                     >
                       {link.label}
                     </Link>
@@ -98,7 +98,7 @@ export function Footer() {
       {/* Copyright */}
       <div className="container flex flex-col items-center justify-between gap-4 py-6 sm:flex-row">
         <p className="text-xs text-white/40 text-center sm:text-left">
-          &copy; {new Date().getFullYear()} The Souled Store. All rights
+          &copy; {new Date().getFullYear()} MR.SMEXO. All rights
           reserved.
         </p>
         <div className="flex flex-wrap justify-center gap-x-4 gap-y-2 text-xs text-white/40">

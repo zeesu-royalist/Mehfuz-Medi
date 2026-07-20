@@ -12,8 +12,8 @@ const fontDisplay = Bebas_Neue({
 
 export const metadata: Metadata = {
   title: {
-    default: "The Souled Store | Officially Licensed Merchandise",
-    template: "%s | The Souled Store",
+    default: "MR.SMEXO | Officially Licensed Merchandise",
+    template: "%s | MR.SMEXO",
   },
   description:
     "Shop officially licensed t-shirts, polos, sneakers and more for men and women.",
