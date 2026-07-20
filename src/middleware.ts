@@ -1,8 +1,5 @@
-import NextAuth from "next-auth";
-import { authConfig } from "@/lib/auth.config";
+import { auth } from "@/lib/auth.config";
 import { NextResponse } from "next/server";
-
-const { auth } = NextAuth(authConfig);
 
 const ADMIN_PREFIX = "/admin";
 const CLIENT_PROTECTED_PREFIXES = ["/account", "/checkout"];

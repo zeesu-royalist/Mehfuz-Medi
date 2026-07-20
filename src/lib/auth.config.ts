@@ -1,4 +1,4 @@
-import type { NextAuthConfig } from "next-auth";
+import NextAuth, { type NextAuthConfig } from "next-auth";
 
 export const authConfig: NextAuthConfig = {
   pages: {
@@ -23,3 +23,6 @@ export const authConfig: NextAuthConfig = {
   },
   providers: [],
 };
+
+export const { auth } = NextAuth(authConfig);
+
