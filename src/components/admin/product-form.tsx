@@ -118,26 +118,72 @@ export function ProductForm({ categories, initialData }: ProductFormProps) {
     name: "variants",
   });
 
+function compressImage(file: File, maxWidth = 1920, maxHeight = 1920, quality = 0.85): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const img = new Image();
+      img.onload = () => {
+        let width = img.width;
+        let height = img.height;
+
+        if (width > maxWidth || height > maxHeight) {
+          if (width / height > maxWidth / maxHeight) {
+            height = Math.round((height * maxWidth) / width);
+            width = maxWidth;
+          } else {
+            width = Math.round((width * maxHeight) / height);
+            height = maxHeight;
+          }
+        }
+
+        const canvas = document.createElement("canvas");
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext("2d");
+        if (!ctx) {
+          resolve(event.target?.result as string);
+          return;
+        }
+        ctx.drawImage(img, 0, 0, width, height);
+        const dataUrl = canvas.toDataURL("image/jpeg", quality);
+        resolve(dataUrl);
+      };
+      img.onerror = () => reject(new Error("Failed to process image"));
+      img.src = event.target?.result as string;
+    };
+    reader.onerror = () => reject(new Error("Failed to read file"));
+    reader.readAsDataURL(file);
+  });
+}
+
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files || files.length === 0) return;
 
     setIsUploading(true);
+    let successCount = 0;
+
     try {
       for (let i = 0; i < files.length; i++) {
         const file = files[i];
-        const reader = new FileReader();
-
-        // Wrap FileReader in promise to process sequentially or run in loop
-        const base64Data = await new Promise<string>((resolve) => {
-          reader.onloadend = () => resolve(reader.result as string);
-          reader.readAsDataURL(file);
-        });
+        
+        let base64Data: string;
+        try {
+          base64Data = await compressImage(file);
+        } catch {
+          base64Data = await new Promise<string>((resolve) => {
+            const reader = new FileReader();
+            reader.onloadend = () => resolve(reader.result as string);
+            reader.readAsDataURL(file);
+          });
+        }
 
         const res = await uploadImageAction(base64Data, "products");
         if (!res.success) {
           toast.error(`Failed to upload ${file.name}: ${res.error}`);
         } else if (res.data) {
+          successCount++;
           appendImage({
             url: res.data.url,
             publicId: res.data.publicId,
@@ -146,12 +192,13 @@ export function ProductForm({ categories, initialData }: ProductFormProps) {
           });
         }
       }
-      toast.success("Images uploaded successfully.");
-    } catch (err) {
-      toast.error("An error occurred during upload.");
+      if (successCount > 0) {
+        toast.success(`${successCount} image(s) uploaded successfully.`);
+      }
+    } catch (err: any) {
+      toast.error(err?.message || "An error occurred during upload.");
     } finally {
       setIsUploading(false);
-      // Clear input
       e.target.value = "";
     }
   };
